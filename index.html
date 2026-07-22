@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RootRel — Travel. Connect. Explore.</title>
+<meta name="description" content="RootRel is an AI-powered travel ecosystem where planning, exploration, community, and safety come together." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
+<style>
+  :root{
+    --ink:#0B1120;
+    --ink-soft:#4A5268;
+    --base:#FFFFFF;
+    --mist:#F5F7FB;
+    --line:#E7EAF2;
+    --coral:#FF5A36;
+    --coral-dim:#FFE7E0;
+    --route:#2D5BFF;
+    --route-dim:#E6ECFF;
+    --teal:#0F9E8E;
+    --radius:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--base);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;letter-spacing:-0.02em;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+  section{position:relative;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    padding:18px 0;
+    transition:background .35s ease, box-shadow .35s ease, padding .35s ease;
+  }
+  header.scrolled{
+    background:rgba(255,255,255,0.75);
+    backdrop-filter:blur(16px) saturate(160%);
+    -webkit-backdrop-filter:blur(16px) saturate(160%);
+    box-shadow:0 1px 0 var(--line);
+    padding:12px 0;
+  }
+  nav{display:flex;align-items:center;justify-content:space-between;}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;}
+  .logo-mark{width:30px;height:30px;border-radius:8px;background:#0B1120;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+  .logo-mark img{width:100%;height:100%;object-fit:contain;padding:3px;}
+  .nav-links{display:flex;gap:34px;font-size:14.5px;font-weight:500;color:var(--ink-soft);}
+  .nav-links a{position:relative;padding:4px 0;transition:color .2s;}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1.5px;background:var(--coral);transition:width .25s ease;}
+  .nav-links a:hover::after{width:100%;}
+  .nav-cta{display:flex;gap:10px;align-items:center;}
+  .btn{
+    font-family:'Inter',sans-serif;font-weight:600;font-size:14px;
+    padding:10px 18px;border-radius:999px;border:1px solid transparent;
+    cursor:pointer;transition:transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+    display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+  }
+  .btn-primary{background:var(--ink);color:#fff;}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(11,17,32,.25);}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--ink);}
+  .btn-coral{background:var(--coral);color:#fff;}
+  .btn-coral:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(255,90,54,.35);}
+  .btn:focus-visible{outline:2px solid var(--route);outline-offset:2px;}
+  .btn-sm{padding:8px 14px;font-size:13px;}
+  .menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:6px;}
+  .menu-toggle svg{width:22px;height:22px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:168px 0 110px;
+    background:
+      radial-gradient(700px 380px at 82% -10%, rgba(45,91,255,.10), transparent 60%),
+      radial-gradient(600px 340px at 8% 8%, rgba(255,90,54,.10), transparent 60%);
+    overflow:hidden;
+  }
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;}
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:7px 14px;border-radius:999px;background:var(--mist);border:1px solid var(--line);
+    font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:26px;
+  }
+  .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--coral);animation:pulse 1.8s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(1.3);}}
+  .hero h1{font-size:clamp(38px,5.2vw,64px);font-weight:700;line-height:1.05;margin-bottom:22px;}
+  .hero h1 .accent{background:linear-gradient(100deg,var(--coral),#FF8A5B);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p{font-size:18px;color:var(--ink-soft);max-width:520px;margin-bottom:34px;}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:14px;}
+
+  .globe-wrap{position:relative;aspect-ratio:1/1;max-width:520px;justify-self:end;}
+  .globe-card{
+    position:absolute;inset:0;border-radius:32px;
+    background:linear-gradient(160deg,#0B1120,#1A2440);
+    overflow:hidden;
+    box-shadow:0 30px 70px -20px rgba(11,17,32,.45);
+  }
+  .globe-card svg{width:100%;height:100%;}
+  .route-line{stroke:url(#routeGrad);stroke-width:1.4;fill:none;stroke-dasharray:6 5;animation:dash 2.4s linear infinite;}
+  @keyframes dash{to{stroke-dashoffset:-100;}}
+  .pin{animation:bob 3s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+  .plane{animation:fly 7s linear infinite;}
+  @keyframes fly{
+    0%{offset-distance:0%;opacity:0;}
+    5%{opacity:1;}
+    95%{opacity:1;}
+    100%{offset-distance:100%;opacity:0;}
+  }
+  .float-chip{
+    position:absolute;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+    backdrop-filter:blur(10px);border-radius:14px;padding:10px 13px;color:#fff;font-size:12px;
+    display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;
+  }
+  .chip-1{top:14%;left:8%;animation:bob 4s ease-in-out infinite;}
+  .chip-2{bottom:12%;right:8%;animation:bob 4.5s ease-in-out infinite reverse;}
+
+  /* ---------- EYEBROW / SECTION HEAD ---------- */
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;
+    color:var(--coral);letter-spacing:.02em;margin-bottom:14px;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .eyebrow::before{content:"";width:16px;height:1.5px;background:var(--coral);}
+  .section-head{max-width:640px;margin-bottom:56px;}
+  .section-head h2{font-size:clamp(28px,3.4vw,40px);font-weight:700;margin-bottom:14px;}
+  .section-head p{color:var(--ink-soft);font-size:16.5px;}
+  .section-pad{padding:110px 0;}
+  .bg-mist{background:var(--mist);}
+
+  /* ---------- CARD GRIDS ---------- */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:28px;transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .card:hover{transform:translateY(-5px);box-shadow:0 20px 40px -18px rgba(11,17,32,.18);border-color:transparent;}
+  .card-icon{
+    width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    margin-bottom:18px;
+  }
+  .card-icon svg{width:22px;height:22px;}
+  .card h3{font-size:17.5px;font-weight:600;margin-bottom:8px;}
+  .card p{font-size:14.5px;color:var(--ink-soft);}
+
+  .feat-card{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px;transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .feat-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px -18px rgba(11,17,32,.16);}
+  .feat-card .learn{
+    display:inline-flex;align-items:center;gap:5px;font-size:13.5px;font-weight:600;color:var(--route);
+    margin-top:14px;cursor:pointer;
+  }
+  .feat-card .learn svg{width:14px;height:14px;transition:transform .2s;}
+  .feat-card:hover .learn svg{transform:translateX(3px);}
+
+  /* ---------- TERRAIN GALLERY ---------- */
+  .terrain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .terrain-card{
+    position:relative;border-radius:24px;overflow:hidden;aspect-ratio:4/5;
+    box-shadow:0 20px 44px -20px rgba(11,17,32,.3);
+  }
+  .terrain-card img{
+    width:100%;height:100%;object-fit:cover;transition:transform .6s ease;
+  }
+  .terrain-card:hover img{transform:scale(1.06);}
+  .terrain-overlay{
+    position:absolute;inset:0;background:linear-gradient(180deg, rgba(11,17,32,0) 40%, rgba(11,17,32,.85) 100%);
+    display:flex;align-items:flex-end;padding:24px;
+  }
+  .terrain-label{color:#fff;}
+  .terrain-label .eyebrow-sm{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#FFB39F;margin-bottom:6px;letter-spacing:.03em;
+  }
+  .terrain-label h3{font-size:20px;font-weight:700;}
+
+  /* ---------- STATS ---------- */
+  .stats-band{
+    background:var(--ink);border-radius:28px;padding:56px 40px;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:24px;color:#fff;
+  }
+  .stat-num{font-family:'Space Grotesk',sans-serif;font-size:clamp(30px,3.6vw,46px);font-weight:700;}
+  .stat-label{font-size:13px;color:#A9B0C6;margin-top:6px;font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- ROADMAP ---------- */
+  .roadmap{position:relative;padding-left:8px;}
+  .roadmap-line{position:absolute;left:29px;top:8px;bottom:8px;width:2px;background:var(--line);}
+  .road-item{display:grid;grid-template-columns:60px 1fr;gap:20px;position:relative;padding-bottom:44px;}
+  .road-item:last-child{padding-bottom:0;}
+  .road-dot{
+    width:60px;height:60px;border-radius:16px;background:#fff;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;
+    font-size:12px;font-weight:600;color:var(--ink-soft);z-index:1;
+  }
+  .road-item.active .road-dot{background:var(--coral);color:#fff;border-color:var(--coral);}
+  .road-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 24px;}
+  .road-card h3{font-size:16.5px;font-weight:600;margin-bottom:5px;}
+  .road-card p{font-size:14px;color:var(--ink-soft);}
+  .road-status{
+    display:inline-block;margin-top:10px;font-size:11.5px;font-weight:600;padding:4px 10px;
+    border-radius:999px;font-family:'JetBrains Mono',monospace;
+  }
+  .status-now{background:var(--coral-dim);color:var(--coral);}
+  .status-next{background:var(--route-dim);color:var(--route);}
+  .status-later{background:var(--mist);color:var(--ink-soft);}
+
+  /* ---------- CAREERS ---------- */
+  .job-card{
+    background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 24px;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;transition:box-shadow .25s ease, border-color .25s;
+  }
+  .job-card:hover{box-shadow:0 14px 30px -16px rgba(11,17,32,.16);border-color:transparent;}
+  .job-title{font-size:16.5px;font-weight:600;margin-bottom:6px;}
+  .job-meta{display:flex;gap:10px;font-size:12.5px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
+  .job-meta span{background:var(--mist);padding:3px 9px;border-radius:999px;}
+  .jobs-list{display:flex;flex-direction:column;gap:14px;}
+
+  /* ---------- FORMS ---------- */
+  .form-panel{
+    background:linear-gradient(160deg, rgba(255,255,255,.75), rgba(255,255,255,.5));
+    border:1px solid var(--line);border-radius:28px;padding:40px;
+    backdrop-filter:blur(10px);
+    box-shadow:0 30px 60px -30px rgba(11,17,32,.2);
+  }
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:7px;color:var(--ink-soft);}
+  .field input, .field select, .field textarea{
+    width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);
+    background:#fff;font-family:'Inter',sans-serif;font-size:14.5px;color:var(--ink);
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:none;border-color:var(--route);box-shadow:0 0 0 3px var(--route-dim);
+  }
+  .field textarea{resize:vertical;min-height:110px;}
+  .field-error{color:var(--coral);font-size:12.5px;margin-top:5px;display:none;}
+  .field.invalid input, .field.invalid select, .field.invalid textarea{border-color:var(--coral);}
+  .field.invalid .field-error{display:block;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .success-box{
+    display:none;text-align:center;padding:30px 10px;
+  }
+  .success-box.show{display:block;}
+  .success-icon{
+    width:52px;height:52px;border-radius:50%;background:var(--coral-dim);color:var(--coral);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 16px;
+  }
+  .success-icon svg{width:26px;height:26px;}
+
+  /* ---------- APPLY MODAL ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(11,17,32,.55);backdrop-filter:blur(4px);
+    display:none;align-items:center;justify-content:center;z-index:200;padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:#fff;border-radius:24px;padding:34px;width:100%;max-width:560px;
+    max-height:88vh;overflow-y:auto;box-shadow:0 40px 80px -30px rgba(11,17,32,.4);
+  }
+  .modal-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;}
+  .modal-head h3{font-size:20px;font-weight:700;}
+  .modal-head p{font-size:13.5px;color:var(--ink-soft);margin-top:4px;}
+  .modal-close{background:var(--mist);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .modal-close svg{width:16px;height:16px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--ink);color:#C4C9DA;padding:70px 0 30px;}
+  .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr;gap:32px;margin-bottom:50px;}
+  .footer-grid h4{color:#fff;font-size:13px;font-weight:600;margin-bottom:16px;letter-spacing:.02em;}
+  .footer-grid a{display:block;font-size:14px;color:#9BA1B8;margin-bottom:11px;transition:color .2s;}
+  .footer-grid a:hover{color:#fff;}
+  .footer-bottom{
+    border-top:1px solid rgba(255,255,255,.09);padding-top:24px;
+    display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#7C8299;flex-wrap:wrap;gap:14px;
+  }
+  .social-row{display:flex;gap:12px;}
+  .social-row a{
+    width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.06);
+    display:flex;align-items:center;justify-content:center;transition:background .2s;
+  }
+  .social-row a:hover{background:rgba(255,255,255,.14);}
+  .social-row svg{width:15px;height:15px;}
+
+  /* ---------- REVEAL ---------- */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:980px){
+    .grid-3{grid-template-columns:repeat(2,1fr);}
+    .grid-4{grid-template-columns:repeat(2,1fr);}
+    .stats-band{grid-template-columns:repeat(2,1fr);}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+    .hero-grid{grid-template-columns:1fr;}
+    .globe-wrap{justify-self:center;max-width:420px;}
+  }
+  @media (max-width:720px){
+    .nav-links{display:none;}
+    .menu-toggle{display:block;}
+    .nav-cta .btn-ghost{display:none;}
+    .grid-3, .grid-4{grid-template-columns:1fr;}
+    .terrain-grid{grid-template-columns:1fr;}
+    .stats-band{grid-template-columns:1fr 1fr;padding:36px 24px;}
+    .form-row{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+    .job-card{flex-direction:column;align-items:flex-start;}
+    .form-panel{padding:26px;}
+  }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <nav>
+      <a href="#home" class="logo">
+        <span class="logo-mark">
+          <img src="assets/logo.jpeg" alt="RootRel logo" />
+        </span>
+        RootRel
+      </a>
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a href="#careers">Careers</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="nav-cta">
+        <a href="#careers" class="btn btn-ghost">Become a Freelancer</a>
+        <a href="#waitlist" class="btn btn-coral">Join Waitlist</a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="home">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="badge"><span class="dot"></span> Launching Soon — RootRel is in build mode</div>
+      <h1>The future of <span class="accent">smart travel</span> starts here.</h1>
+      <p>RootRel is building an AI-powered travel ecosystem where planning, exploration, community, and safety come together — one trip at a time.</p>
+      <div class="hero-actions">
+        <a href="#waitlist" class="btn btn-primary">Join Waitlist</a>
+        <a href="#careers" class="btn btn-ghost">Become a Freelancer</a>
+        <a href="#about" class="btn btn-ghost">Learn More ↓</a>
+      </div>
+    </div>
+
+    <div class="globe-wrap">
+      <div class="globe-card">
+        <svg viewBox="0 0 400 400">
+          <defs>
+            <linearGradient id="routeGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#FF5A36"/>
+              <stop offset="100%" stop-color="#2D5BFF"/>
+            </linearGradient>
+          </defs>
+          <circle cx="200" cy="200" r="150" stroke="rgba(255,255,255,.10)" stroke-width="1" fill="none"/>
+          <circle cx="200" cy="200" r="112" stroke="rgba(255,255,255,.08)" stroke-width="1" fill="none"/>
+          <circle cx="200" cy="200" r="74" stroke="rgba(255,255,255,.08)" stroke-width="1" fill="none"/>
+
+          <path id="p1" class="route-line" d="M90 260 Q200 150 320 130"/>
+          <path id="p2" class="route-line" d="M110 130 Q200 260 300 250"/>
+
+          <circle class="pin" cx="90" cy="260" r="5" fill="#FF5A36"/>
+          <circle class="pin" cx="320" cy="130" r="5" fill="#2D5BFF" style="animation-delay:.6s"/>
+          <circle class="pin" cx="110" cy="130" r="5" fill="#0F9E8E" style="animation-delay:1.1s"/>
+          <circle class="pin" cx="300" cy="250" r="5" fill="#FF5A36" style="animation-delay:1.6s"/>
+
+          <g class="plane" style="offset-path:path('M90 260 Q200 150 320 130');">
+            <path d="M0 -4 L4 4 L0 2 L-4 4 Z" fill="#fff"/>
+          </g>
+          <g class="plane" style="offset-path:path('M110 130 Q200 260 300 250'); animation-delay:3s;">
+            <path d="M0 -4 L4 4 L0 2 L-4 4 Z" fill="#fff"/>
+          </g>
+        </svg>
+      </div>
+      <div class="float-chip chip-1">✦ AI Planning: on</div>
+      <div class="float-chip chip-2">◎ 4 travelers nearby</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT / WHAT IS ROOTREL ================= -->
+<section class="section-pad" id="about">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">What is RootRel</div>
+      <h2>One ecosystem for every part of the trip.</h2>
+      <p>RootRel brings together the tools travelers usually piece together from five different apps — planning, community, safety, and rewards — into a single connected experience.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card reveal">
+        <div class="card-icon" style="background:var(--coral-dim);color:var(--coral);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg>
+        </div>
+        <h3>AI Planning</h3>
+        <p>An itinerary engine that adapts to your pace, budget, and interests as you go.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon" style="background:var(--route-dim);color:var(--route);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5"/><path d="M13 15c2.5 0 5 2 5 5"/></svg>
+        </div>
+        <h3>Travel Communities</h3>
+        <p>Join groups of travelers heading the same direction, before you even land.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon" style="background:#FFF1E0;color:#C7660A;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>
+        </div>
+        <h3>Emergency Assistance</h3>
+        <p>One-tap SOS with location sharing, built for the moments plans fall apart.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon" style="background:#EAF7F0;color:var(--teal);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v12H8l-4 4V4z"/></svg>
+        </div>
+        <h3>Social Travel</h3>
+        <p>Share a live feed of your trip and discover what other travelers are seeing right now.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon" style="background:#F3EAFB;color:#7B3FD6;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+        </div>
+        <h3>Gamification &amp; Rewards</h3>
+        <p>Complete challenges as you travel and unlock rewards from partner brands.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon" style="background:var(--coral-dim);color:var(--coral);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.5 10.5c0 6-8.5 11-8.5 11s-8.5-5-8.5-11a8.5 8.5 0 0117 0z"/><circle cx="12" cy="10.5" r="2.5"/></svg>
+        </div>
+        <h3>Hidden Gems</h3>
+        <p>Surface the places locals recommend, not just the top ten lists.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TERRAIN GALLERY ================= -->
+<section class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Anywhere You Go</div>
+      <h2>From snowfields to jungle canopies.</h2>
+      <p>RootRel is built for the full range of a traveler's map — the AI planner, community feed, and SOS tools work the same whether you're above the treeline or deep in the rainforest.</p>
+    </div>
+    <div class="terrain-grid">
+      <div class="terrain-card reveal">
+        <img src="assets/terrain-snow.jpeg" alt="Snow-covered forest terrain" />
+        <div class="terrain-overlay">
+          <div class="terrain-label">
+            <div class="eyebrow-sm">TERRAIN / ALPINE</div>
+            <h3>Snow &amp; Summit</h3>
+          </div>
+        </div>
+      </div>
+      <div class="terrain-card reveal">
+        <img src="assets/terrain-desert.jpeg" alt="Desert dunes terrain" />
+        <div class="terrain-overlay">
+          <div class="terrain-label">
+            <div class="eyebrow-sm">TERRAIN / DESERT</div>
+            <h3>Dune &amp; Ruin</h3>
+          </div>
+        </div>
+      </div>
+      <div class="terrain-card reveal">
+        <img src="assets/terrain-jungle.jpeg" alt="Jungle rainforest terrain" />
+        <div class="terrain-overlay">
+          <div class="terrain-label">
+            <div class="eyebrow-sm">TERRAIN / RAINFOREST</div>
+            <h3>Canopy &amp; River</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="section-pad bg-mist" id="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Features</div>
+      <h2>Everything a trip needs, in one place.</h2>
+      <p>Twelve core tools, built around how people actually travel — before takeoff, on the ground, and after they're home.</p>
+    </div>
+    <div class="grid-4" id="featureGrid"></div>
+  </div>
+</section>
+
+<!-- ================= WHY ROOTREL / STATS ================= -->
+<section class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Why RootRel</div>
+      <h2>Built deliberately, not rushed.</h2>
+      <p>We're pre-launch — so instead of vanity metrics, here's what's actually true about RootRel today.</p>
+    </div>
+    <div class="stats-band reveal">
+      <div>
+        <div class="stat-num" data-count="12">0</div>
+        <div class="stat-label">CORE FEATURES IN BUILD</div>
+      </div>
+      <div>
+        <div class="stat-num" data-count="6">0</div>
+        <div class="stat-label">ROADMAP MILESTONES</div>
+      </div>
+      <div>
+        <div class="stat-num" data-count="9">0</div>
+        <div class="stat-label">OPEN FREELANCE ROLES</div>
+      </div>
+      <div>
+        <div class="stat-num" data-count="100">0</div>
+        <div class="stat-label">% REMOTE TEAM</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ROADMAP ================= -->
+<section class="section-pad bg-mist" id="roadmap">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Roadmap</div>
+      <h2>Where RootRel is headed.</h2>
+      <p>We're building in public. Here's the sequence, gate by gate.</p>
+    </div>
+    <div class="roadmap reveal">
+      <div class="roadmap-line"></div>
+
+      <div class="road-item active">
+        <div class="road-dot">RR-1</div>
+        <div class="road-card">
+          <h3>Website Launch</h3>
+          <p>The public site, waitlist, and careers page go live.</p>
+          <span class="road-status status-now">In progress</span>
+        </div>
+      </div>
+      <div class="road-item">
+        <div class="road-dot">RR-2</div>
+        <div class="road-card">
+          <h3>Community Launch</h3>
+          <p>Early waitlist members get access to RootRel's first travel communities.</p>
+          <span class="road-status status-next">Up next</span>
+        </div>
+      </div>
+      <div class="road-item">
+        <div class="road-dot">RR-3</div>
+        <div class="road-card">
+          <h3>Beta Testing</h3>
+          <p>A closed beta of the AI planner, feed, and SOS tools with real travelers.</p>
+          <span class="road-status status-later">Planned</span>
+        </div>
+      </div>
+      <div class="road-item">
+        <div class="road-dot">RR-4</div>
+        <div class="road-card">
+          <h3>Android App</h3>
+          <p>RootRel comes to Android, built for travel on the move.</p>
+          <span class="road-status status-later">Planned</span>
+        </div>
+      </div>
+      <div class="road-item">
+        <div class="road-dot">RR-5</div>
+        <div class="road-card">
+          <h3>iOS App</h3>
+          <p>A native iOS release follows, with full feature parity.</p>
+          <span class="road-status status-later">Planned</span>
+        </div>
+      </div>
+      <div class="road-item">
+        <div class="road-dot">RR-6</div>
+        <div class="road-card">
+          <h3>Global Expansion</h3>
+          <p>Local partners, languages, and communities roll out region by region.</p>
+          <span class="road-status status-later">Planned</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CAREERS ================= -->
+<section class="section-pad" id="careers">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Careers</div>
+      <h2>Join RootRel.</h2>
+      <p>Help build the future of travel. All roles below are freelance and fully remote.</p>
+    </div>
+    <div class="jobs-list" id="jobsList"></div>
+  </div>
+</section>
+
+<!-- ================= WAITLIST ================= -->
+<section class="section-pad bg-mist" id="waitlist">
+  <div class="wrap" style="max-width:640px;">
+    <div class="section-head reveal" style="text-align:center;margin-left:auto;margin-right:auto;">
+      <div class="eyebrow" style="justify-content:center;">Join Waitlist</div>
+      <h2>Be first through the gate.</h2>
+      <p>Get early access when RootRel opens its first communities.</p>
+    </div>
+
+    <div class="form-panel reveal">
+      <form id="waitlistForm" novalidate>
+        <div class="field" id="wl-email-field">
+          <label for="wl-email">Email address</label>
+          <input type="email" id="wl-email" placeholder="you@example.com" />
+          <div class="field-error">Enter a valid email address.</div>
+        </div>
+        <div class="form-row">
+          <div class="field" id="wl-country-field">
+            <label for="wl-country">Country</label>
+            <input type="text" id="wl-country" placeholder="e.g. Canada" />
+            <div class="field-error">Tell us your country.</div>
+          </div>
+          <div class="field" id="wl-interest-field">
+            <label for="wl-interest">Primary interest</label>
+            <select id="wl-interest">
+              <option value="">Select one</option>
+              <option>AI Trip Planning</option>
+              <option>Travel Communities</option>
+              <option>Safety &amp; SOS</option>
+              <option>Rewards &amp; Challenges</option>
+            </select>
+            <div class="field-error">Pick an interest.</div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-coral" style="width:100%;justify-content:center;margin-top:6px;">Join Waitlist</button>
+      </form>
+      <div class="success-box" id="wlSuccess">
+        <div class="success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <h3 style="margin-bottom:6px;">You're on the list.</h3>
+        <p style="color:var(--ink-soft);font-size:14.5px;">We'll email you the moment RootRel opens up.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="section-pad" id="contact">
+  <div class="wrap" style="max-width:640px;">
+    <div class="section-head reveal" style="text-align:center;margin-left:auto;margin-right:auto;">
+      <div class="eyebrow" style="justify-content:center;">Contact</div>
+      <h2>Talk to the RootRel team.</h2>
+      <p>Questions, partnerships, press — send it over.</p>
+    </div>
+
+    <div class="form-panel reveal">
+      <form id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="field" id="c-name-field">
+            <label for="c-name">Name</label>
+            <input type="text" id="c-name" placeholder="Your name" />
+            <div class="field-error">Enter your name.</div>
+          </div>
+          <div class="field" id="c-email-field">
+            <label for="c-email">Email</label>
+            <input type="email" id="c-email" placeholder="you@example.com" />
+            <div class="field-error">Enter a valid email.</div>
+          </div>
+        </div>
+        <div class="field" id="c-subject-field">
+          <label for="c-subject">Subject</label>
+          <input type="text" id="c-subject" placeholder="What's this about?" />
+          <div class="field-error">Add a subject.</div>
+        </div>
+        <div class="field" id="c-message-field">
+          <label for="c-message">Message</label>
+          <textarea id="c-message" placeholder="Write your message..."></textarea>
+          <div class="field-error">Message can't be empty.</div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:6px;">Send Message</button>
+      </form>
+      <div class="success-box" id="cSuccess">
+        <div class="success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <h3 style="margin-bottom:6px;">Message sent.</h3>
+        <p style="color:var(--ink-soft);font-size:14.5px;">We'll get back to you shortly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<!-- ================= APPLY MODAL ================= -->
+<div class="modal-overlay" id="applyModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div>
+        <h3 id="applyRoleTitle">Apply</h3>
+        <p>Freelance · Remote · RootRel</p>
+      </div>
+      <button class="modal-close" id="applyClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="applyForm" novalidate>
+      <div class="form-row">
+        <div class="field" id="ap-name-field">
+          <label for="ap-name">Full name</label>
+          <input type="text" id="ap-name" />
+          <div class="field-error">Name is required.</div>
+        </div>
+        <div class="field" id="ap-email-field">
+          <label for="ap-email">Email</label>
+          <input type="email" id="ap-email" />
+          <div class="field-error">Valid email required.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="ap-phone">Phone</label>
+          <input type="text" id="ap-phone" />
+        </div>
+        <div class="field">
+          <label for="ap-country">Country</label>
+          <input type="text" id="ap-country" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="ap-linkedin">LinkedIn</label>
+          <input type="text" id="ap-linkedin" placeholder="linkedin.com/in/..." />
+        </div>
+        <div class="field">
+          <label for="ap-github">GitHub</label>
+          <input type="text" id="ap-github" placeholder="github.com/..." />
+        </div>
+      </div>
+      <div class="field">
+        <label for="ap-portfolio">Portfolio / resume link</label>
+        <input type="text" id="ap-portfolio" placeholder="Link to your portfolio or resume" />
+      </div>
+      <div class="field">
+        <label for="ap-cover">Cover letter</label>
+        <textarea id="ap-cover" placeholder="Why RootRel, why this role..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Submit Application</button>
+    </form>
+    <div class="success-box" id="apSuccess">
+      <div class="success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <h3 style="margin-bottom:6px;">Application received.</h3>
+      <p style="color:var(--ink-soft);font-size:14.5px;">We'll be in touch if it's a fit.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="color:#fff;margin-bottom:14px;">
+          <span class="logo-mark"><img src="assets/logo.jpeg" alt="RootRel logo" /></span>
+          RootRel
+        </div>
+        <p style="font-size:14px;color:#9BA1B8;max-width:230px;margin-bottom:20px;">Travel. Connect. Explore.</p>
+        <div class="social-row">
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor" style="color:#fff"><path d="M18.9 2H22l-7.2 8.2L23 22h-6.7l-5.2-6.8L5 22H2l7.7-8.8L1 2h6.9l4.7 6.2L18.9 2z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" style="color:#fff"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" style="color:#fff"><path d="M4.98 3.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V21h-4z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a href="#careers">Careers</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookies</a>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <a href="#waitlist">Join Waitlist</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#careers">Become a Freelancer</a>
+      </div>
+      <div>
+        <h4>Newsletter</h4>
+        <p style="font-size:13.5px;color:#9BA1B8;margin-bottom:12px;">Occasional updates as we build. No spam.</p>
+        <form id="newsletterForm" style="display:flex;gap:8px;">
+          <input type="email" required placeholder="Email" style="flex:1;min-width:0;padding:9px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;font-size:13px;">
+          <button class="btn btn-coral btn-sm" type="submit">Go</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 RootRel. All rights reserved.</span>
+      <span>Built for travelers, by travelers.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Header scroll state
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Animated counters
+  const counters = document.querySelectorAll('.stat-num');
+  const counterIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.dataset.count, 10);
+        let cur = 0;
+        const step = Math.max(1, Math.round(target / 40));
+        const timer = setInterval(() => {
+          cur += step;
+          if (cur >= target) { cur = target; clearInterval(timer); }
+          el.textContent = cur;
+        }, 25);
+        counterIO.unobserve(el);
+      }
+    });
+  }, { threshold: 0.4 });
+  counters.forEach(c => counterIO.observe(c));
+
+  // Features data → render feature cards
+  const features = [
+    { title: "AI Travel Planner", desc: "Generates a day-by-day itinerary from your dates, budget, and interests.", color: "var(--coral-dim)", icon: "var(--coral)" },
+    { title: "Discover Destinations", desc: "Explore places ranked by fit, not just popularity.", color: "var(--route-dim)", icon: "var(--route)" },
+    { title: "Travel Feed", desc: "A live stream of moments from travelers around you.", color: "#EAF7F0", icon: "var(--teal)" },
+    { title: "Challenges", desc: "Trip-based challenges that reward exploring off the checklist.", color: "#F3EAFB", icon: "#7B3FD6" },
+    { title: "Rewards", desc: "Redeem points earned on the road with partner brands.", color: "#FFF1E0", icon: "#C7660A" },
+    { title: "Emergency SOS", desc: "Instant alert with live location to your emergency contacts.", color: "var(--coral-dim)", icon: "var(--coral)" },
+    { title: "Travel Timeline", desc: "Every trip, laid out chronologically, automatically.", color: "var(--route-dim)", icon: "var(--route)" },
+    { title: "Travel Memories", desc: "Photos and notes organized by place, not just by date.", color: "#EAF7F0", icon: "var(--teal)" },
+    { title: "Communities", desc: "Join a group of travelers heading to the same city or event.", color: "#F3EAFB", icon: "#7B3FD6" },
+    { title: "Nearby Travelers", desc: "See who else from RootRel is close by, right now.", color: "#FFF1E0", icon: "#C7660A" },
+    { title: "Smart Recommendations", desc: "Suggestions that adjust as your trip actually unfolds.", color: "var(--coral-dim)", icon: "var(--coral)" },
+    { title: "Interactive Maps", desc: "Layer routes, pins, and community activity on one map.", color: "var(--route-dim)", icon: "var(--route)" },
+  ];
+  const grid = document.getElementById('featureGrid');
+  grid.innerHTML = features.map(f => `
+    <div class="feat-card reveal">
+      <div class="card-icon" style="background:${f.color};color:${f.icon};">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
+      </div>
+      <h3>${f.title}</h3>
+      <p>${f.desc}</p>
+      <span class="learn">Learn more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+    </div>
+  `).join('');
+  document.querySelectorAll('#featureGrid .reveal').forEach(el => io.observe(el));
+
+  // Jobs data → render job cards
+  const jobs = [
+    { title: "Frontend Developer", exp: "2+ yrs", loc: "Remote" },
+    { title: "Backend Developer", exp: "2+ yrs", loc: "Remote" },
+    { title: "Flutter Developer", exp: "1+ yrs", loc: "Remote" },
+    { title: "React Developer", exp: "2+ yrs", loc: "Remote" },
+    { title: "UI/UX Designer", exp: "2+ yrs", loc: "Remote" },
+    { title: "AI Engineer", exp: "2+ yrs", loc: "Remote" },
+    { title: "DevOps Engineer", exp: "2+ yrs", loc: "Remote" },
+    { title: "Content Writer", exp: "1+ yrs", loc: "Remote" },
+    { title: "Travel Researcher", exp: "1+ yrs", loc: "Remote" },
+  ];
+  const jobsList = document.getElementById('jobsList');
+  jobsList.innerHTML = jobs.map(j => `
+    <div class="job-card reveal">
+      <div>
+        <div class="job-title">${j.title}</div>
+        <div class="job-meta"><span>${j.exp} experience</span><span>${j.loc}</span><span>Freelance</span></div>
+      </div>
+      <button class="btn btn-ghost btn-sm apply-btn" data-role="${j.title}">Apply Now</button>
+    </div>
+  `).join('');
+  document.querySelectorAll('#jobsList .reveal').forEach(el => io.observe(el));
+
+  const applyModal = document.getElementById('applyModal');
+  const applyForm = document.getElementById('applyForm');
+  const apSuccess = document.getElementById('apSuccess');
+  let currentRole = '';
+
+  jobsList.addEventListener('click', (e) => {
+    const btn = e.target.closest('.apply-btn');
+    if (!btn) return;
+    currentRole = btn.dataset.role;
+    document.getElementById('applyRoleTitle').textContent = `Apply — ${currentRole}`;
+    applyForm.reset();
+    applyForm.style.display = 'block';
+    apSuccess.classList.remove('show');
+    ['ap-name-field', 'ap-email-field'].forEach((id) => setInvalid(document.getElementById(id), false));
+    applyModal.classList.add('open');
+  });
+
+  document.getElementById('applyClose').addEventListener('click', () => applyModal.classList.remove('open'));
+  applyModal.addEventListener('click', (e) => { if (e.target === applyModal) applyModal.classList.remove('open'); });
+
+  applyForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('ap-name');
+    const email = document.getElementById('ap-email');
+    let valid = true;
+    setInvalid(document.getElementById('ap-name-field'), name.value.trim() === '');
+    if (name.value.trim() === '') valid = false;
+    setInvalid(document.getElementById('ap-email-field'), !isEmail(email.value));
+    if (!isEmail(email.value)) valid = false;
+    if (!valid) return;
+
+    const submitBtn = applyForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    try {
+      const res = await fetch('/api/careers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          role: currentRole,
+          name: name.value,
+          email: email.value,
+          phone: document.getElementById('ap-phone').value,
+          country: document.getElementById('ap-country').value,
+          linkedin: document.getElementById('ap-linkedin').value,
+          github: document.getElementById('ap-github').value,
+          portfolio: document.getElementById('ap-portfolio').value,
+          resumeUrl: document.getElementById('ap-portfolio').value,
+          coverLetter: document.getElementById('ap-cover').value,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+      applyForm.style.display = 'none';
+      apSuccess.classList.add('show');
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Application';
+      alert(err.message);
+    }
+  });
+
+  // --- Form validation helpers ---
+  function setInvalid(fieldEl, invalid) {
+    fieldEl.classList.toggle('invalid', invalid);
+  }
+  function isEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+  // Waitlist form
+  const waitlistForm = document.getElementById('waitlistForm');
+  waitlistForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('wl-email');
+    const country = document.getElementById('wl-country');
+    const interest = document.getElementById('wl-interest');
+    let valid = true;
+
+    setInvalid(document.getElementById('wl-email-field'), !isEmail(email.value));
+    if (!isEmail(email.value)) valid = false;
+    setInvalid(document.getElementById('wl-country-field'), country.value.trim() === '');
+    if (country.value.trim() === '') valid = false;
+    setInvalid(document.getElementById('wl-interest-field'), interest.value === '');
+    if (interest.value === '') valid = false;
+
+    if (!valid) return;
+
+    const submitBtn = waitlistForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Joining…';
+
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.value, country: country.value, interest: interest.value }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+      waitlistForm.style.display = 'none';
+      document.getElementById('wlSuccess').classList.add('show');
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Join Waitlist';
+      setInvalid(document.getElementById('wl-email-field'), true);
+      document.querySelector('#wl-email-field .field-error').textContent = err.message;
+    }
+  });
+
+  // Contact form
+  const contactForm = document.getElementById('contactForm');
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('c-name');
+    const email = document.getElementById('c-email');
+    const subject = document.getElementById('c-subject');
+    const message = document.getElementById('c-message');
+    let valid = true;
+
+    setInvalid(document.getElementById('c-name-field'), name.value.trim() === '');
+    if (name.value.trim() === '') valid = false;
+    setInvalid(document.getElementById('c-email-field'), !isEmail(email.value));
+    if (!isEmail(email.value)) valid = false;
+    setInvalid(document.getElementById('c-subject-field'), subject.value.trim() === '');
+    if (subject.value.trim() === '') valid = false;
+    setInvalid(document.getElementById('c-message-field'), message.value.trim() === '');
+    if (message.value.trim() === '') valid = false;
+
+    if (!valid) return;
+
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name.value, email: email.value, subject: subject.value, message: message.value }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+      contactForm.style.display = 'none';
+      document.getElementById('cSuccess').classList.add('show');
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Message';
+      alert(err.message);
+    }
+  });
+
+  // Newsletter (footer) — lightweight inline confirmation
+  document.getElementById('newsletterForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const input = this.querySelector('input');
+    if (!isEmail(input.value)) { input.style.borderColor = 'var(--coral)'; return; }
+    this.innerHTML = '<span style="font-size:13px;color:#9BA1B8;">Subscribed ✓</span>';
+  });
+
+  // Mobile menu (simple toggle → scrolls to nav-links shown as list)
+  const menuToggle = document.getElementById('menuToggle');
+  menuToggle.addEventListener('click', () => {
+    const links = document.querySelector('.nav-links');
+    const isOpen = links.style.display === 'flex';
+    links.style.display = isOpen ? 'none' : 'flex';
+    links.style.flexDirection = 'column';
+    links.style.position = 'fixed';
+    links.style.top = '64px';
+    links.style.left = '0';
+    links.style.right = '0';
+    links.style.background = '#fff';
+    links.style.padding = '20px 28px';
+    links.style.boxShadow = '0 12px 24px rgba(11,17,32,.12)';
+    links.style.gap = '18px';
+  });
+</script>
+
+</body>
+</html>

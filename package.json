@@ -1,0 +1,13 @@
+{
+  "name": "rootrel-site",
+  "version": "1.0.0",
+  "description": "RootRel — Travel. Connect. Explore. Static site + zero-dependency Node.js backend.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

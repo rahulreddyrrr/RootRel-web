@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RootRel Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0B1120;--ink-soft:#4A5268;--mist:#F5F7FB;--line:#E7EAF2;--coral:#FF5A36;--route:#2D5BFF;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;background:var(--mist);color:var(--ink);}
+  h1,h2{font-family:'Space Grotesk',sans-serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  #login{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+  }
+  .login-box{background:#fff;border:1px solid var(--line);border-radius:20px;padding:36px;width:340px;box-shadow:0 20px 50px -20px rgba(11,17,32,.25);}
+  .login-box h1{font-size:20px;margin-bottom:6px;}
+  .login-box p{color:var(--ink-soft);font-size:13.5px;margin-bottom:20px;}
+  input{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);font-size:14px;margin-bottom:12px;}
+  input:focus{outline:none;border-color:var(--route);}
+  button{cursor:pointer;font-weight:600;font-size:14px;border:none;border-radius:10px;padding:11px;width:100%;background:var(--ink);color:#fff;}
+  #loginError{color:var(--coral);font-size:13px;margin-top:8px;display:none;}
+
+  #dashboard{display:none;}
+  header{background:#fff;border-bottom:1px solid var(--line);padding:16px 28px;display:flex;justify-content:space-between;align-items:center;}
+  header h1{font-size:17px;}
+  header button{width:auto;padding:8px 16px;background:transparent;color:var(--ink-soft);border:1px solid var(--line);}
+  main{max-width:1100px;margin:0 auto;padding:32px 28px;}
+  .tabs{display:flex;gap:10px;margin-bottom:22px;}
+  .tab{padding:9px 16px;border-radius:999px;font-size:13.5px;font-weight:600;cursor:pointer;background:#fff;border:1px solid var(--line);color:var(--ink-soft);}
+  .tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .count{font-size:13px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;}
+  .export-btn{width:auto;padding:8px 14px;font-size:13px;background:var(--route);}
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--line);}
+  th,td{text-align:left;padding:12px 14px;font-size:13.5px;border-bottom:1px solid var(--line);}
+  th{background:var(--mist);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-soft);text-transform:uppercase;}
+  tr:last-child td{border-bottom:none;}
+  .del-btn{width:auto;padding:6px 12px;font-size:12px;background:#fff;color:var(--coral);border:1px solid var(--coral);}
+  .empty{padding:40px;text-align:center;color:var(--ink-soft);font-size:14px;}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="login-box">
+    <h1>RootRel Admin</h1>
+    <p>Sign in to view waitlist, contacts, and applications.</p>
+    <input type="password" id="pw" placeholder="Admin password" />
+    <button id="loginBtn">Sign in</button>
+    <div id="loginError">Incorrect password.</div>
+  </div>
+</div>
+
+<div id="dashboard">
+  <header>
+    <h1>RootRel Admin</h1>
+    <button id="logoutBtn">Log out</button>
+  </header>
+  <main>
+    <div class="tabs">
+      <div class="tab active" data-tab="waitlist">Waitlist</div>
+      <div class="tab" data-tab="contacts">Messages</div>
+      <div class="tab" data-tab="careers">Applications</div>
+    </div>
+    <div class="toolbar">
+      <div class="count" id="rowCount">0 records</div>
+      <button class="export-btn" id="exportBtn">Export CSV</button>
+    </div>
+    <div id="tableWrap"></div>
+  </main>
+</div>
+
+<script>
+  let token = sessionStorage.getItem('rootrel_admin_token') || '';
+  let activeTab = 'waitlist';
+
+  const loginEl = document.getElementById('login');
+  const dashEl = document.getElementById('dashboard');
+
+  function showDashboard() {
+    loginEl.style.display = 'none';
+    dashEl.style.display = 'block';
+    loadTab(activeTab);
+  }
+
+  if (token) showDashboard();
+
+  document.getElementById('loginBtn').addEventListener('click', async () => {
+    const pw = document.getElementById('pw').value;
+    const res = await fetch('/api/admin/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw }),
+    });
+    if (!res.ok) {
+      document.getElementById('loginError').style.display = 'block';
+      return;
+    }
+    const data = await res.json();
+    token = data.token;
+    sessionStorage.setItem('rootrel_admin_token', token);
+    showDashboard();
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    sessionStorage.removeItem('rootrel_admin_token');
+    location.reload();
+  });
+
+  document.querySelectorAll('.tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeTab = tab.dataset.tab;
+      loadTab(activeTab);
+    });
+  });
+
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    window.open(`/api/admin/export/${activeTab}?token=${token}`, '_blank');
+  });
+
+  async function loadTab(tab) {
+    const res = await fetch(`/api/admin/${tab}`, { headers: { 'x-admin-token': token } });
+    if (res.status === 401) { sessionStorage.removeItem('rootrel_admin_token'); location.reload(); return; }
+    const rows = await res.json();
+    renderTable(tab, rows);
+  }
+
+  function renderTable(tab, rows) {
+    document.getElementById('rowCount').textContent = `${rows.length} record${rows.length === 1 ? '' : 's'}`;
+    const wrap = document.getElementById('tableWrap');
+    if (rows.length === 0) {
+      wrap.innerHTML = '<div class="empty">No entries yet.</div>';
+      return;
+    }
+    const cols = {
+      waitlist: ['email', 'country', 'interest', 'createdAt'],
+      contacts: ['name', 'email', 'subject', 'message', 'createdAt'],
+      careers: ['role', 'name', 'email', 'country', 'resumeUrl', 'createdAt'],
+    }[tab];
+
+    wrap.innerHTML = `
+      <table>
+        <thead><tr>${cols.map((c) => `<th>${c}</th>`).join('')}<th></th></tr></thead>
+        <tbody>
+          ${rows.map((r) => `
+            <tr data-id="${r.id}">
+              ${cols.map((c) => `<td>${(r[c] || '').toString().slice(0, 80)}</td>`).join('')}
+              <td><button class="del-btn" data-id="${r.id}">Delete</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+
+    wrap.querySelectorAll('.del-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        await fetch(`/api/admin/${tab}/${btn.dataset.id}`, { method: 'DELETE', headers: { 'x-admin-token': token } });
+        loadTab(tab);
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
